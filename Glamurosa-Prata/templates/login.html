@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% block title %}Login{% endblock %}
+
+    <h1>Faça Login</h1>
+    
+    <form action="{{ url_for('auth.submit_login') }}" method="post">
+        <label for="login">Login:</label>
+        <input type="text" id="login" name="login" required><br><br>
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <br><br>
+    <p>Não tem uma conta? <a href="{{ url_for('user.cadastro_usuario') }}">Cadastre-se aqui</a>.</p>
+{% endblock %}

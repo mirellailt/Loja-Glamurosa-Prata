@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Joias em Prata{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Joias em Prata</h1>
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('joia.cadastrar_joia') }}" class="btn btn-dark">+ Nova Joia</a>
+    {% endif %}
+</div>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="busca" class="form-control" placeholder="Buscar por nome ou código" value="{{ busca }}">
+    </div>
+    <div class="col-md-4">
+        <select name="categoria" class="form-select">
+            <option value="">Todas as categorias</option>
+            {% for c in categorias %}
+                <option value="{{ c }}" {% if c == categoria_atual %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button class="btn btn-secondary">Filtrar</button>
+    </div>
+</form>
+
+{% if joias %}
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Prata</th>
+                <th>Preço</th>
+                <th>Estoque</th>
+                <th class="text-end">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for j in joias %}
+            <tr>
+                <td>{{ j.codigo }}</td>
+                <td>{{ j.nome }}</td>
+                <td>{{ j.categoria }}</td>
+                <td>{{ j.tipo_prata }}</td>
+                <td>R$ {{ "%.2f"|format(j.preco)|replace('.', ',') }}</td>
+                <td>
+                    {% if j.estoque == 0 %}
+                        <span class="badge bg-danger">Esgotado</span>
+                    {% else %}
+                        {{ j.estoque }}
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    <a href="{{ url_for('joia.detalhe_joia', joia_id=j.id) }}" class="btn btn-sm btn-outline-secondary">Ver</a>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('joia.editar_joia', joia_id=j.id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <form action="{{ url_for('joia.deletar_joia', joia_id=j.id) }}" method="post" style="display:inline;"
+                              onsubmit="return confirm('Excluir esta joia?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <div class="alert alert-secondary">Nenhuma joia encontrada.</div>
+{% endif %}
+{% endblock %}

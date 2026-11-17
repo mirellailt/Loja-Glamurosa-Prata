@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{% if modo == 'edicao' %}Editar Joia{% else %}Cadastrar Joia{% endif %}{% endblock %}
+
+{% block content %}
+<h1>{% if modo == 'edicao' %}Editar Joia{% else %}Cadastrar Joia{% endif %}</h1>
+
+<form action="" method="post" class="row g-3 mt-1">
+    <div class="col-md-4">
+        <label for="codigo" class="form-label">Código *</label>
+        <input type="text" id="codigo" name="codigo" class="form-control" maxlength="30"
+               value="{{ joia.codigo if joia else '' }}" required>
+    </div>
+    <div class="col-md-8">
+        <label for="nome" class="form-label">Nome *</label>
+        <input type="text" id="nome" name="nome" class="form-control" maxlength="100"
+               value="{{ joia.nome if joia else '' }}" required>
+    </div>
+
+    <div class="col-md-6">
+        <label for="categoria" class="form-label">Categoria *</label>
+        <select id="categoria" name="categoria" class="form-select" required>
+            <option value="" disabled {% if not joia %}selected{% endif %}>Selecione</option>
+            {% for c in categorias %}
+                <option value="{{ c }}" {% if joia and joia.categoria == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-6">
+        <label for="tipo_prata" class="form-label">Tipo de prata *</label>
+        <select id="tipo_prata" name="tipo_prata" class="form-select" required>
+            {% for t in tipos_prata %}
+                <option value="{{ t }}" {% if (joia and joia.tipo_prata == t) or (not joia and t == 'Prata 925') %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label for="preco" class="form-label">Preço (R$) *</label>
+        <input type="number" step="0.01" min="0" id="preco" name="preco" class="form-control"
+               value="{{ joia.preco if joia else '' }}" required>
+    </div>
+    <div class="col-md-3">
+        <label for="estoque" class="form-label">Estoque *</label>
+        <input type="number" step="1" min="0" id="estoque" name="estoque" class="form-control"
+               value="{{ joia.estoque if joia else 0 }}" required>
+    </div>
+    <div class="col-md-3">
+        <label for="peso_gramas" class="form-label">Peso (g)</label>
+        <input type="number" step="0.01" min="0" id="peso_gramas" name="peso_gramas" class="form-control"
+               value="{{ joia.peso_gramas if joia and joia.peso_gramas is not none else '' }}">
+    </div>
+    <div class="col-md-3">
+        <label for="tamanho" class="form-label">Tamanho</label>
+        <input type="text" id="tamanho" name="tamanho" class="form-control" maxlength="30" placeholder="Ex.: aro 16, 45 cm"
+               value="{{ joia.tamanho if joia and joia.tamanho else '' }}">
+    </div>
+
+    <div class="col-12">
+        <label for="imagem_url" class="form-label">URL da imagem</label>
+        <input type="url" id="imagem_url" name="imagem_url" class="form-control" maxlength="300"
+               value="{{ joia.imagem_url if joia and joia.imagem_url else '' }}">
+    </div>
+    <div class="col-12">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea id="descricao" name="descricao" class="form-control" rows="3" maxlength="500">{{ joia.descricao if joia and joia.descricao else '' }}</textarea>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-dark">{% if modo == 'edicao' %}Salvar alterações{% else %}Cadastrar{% endif %}</button>
+        <a href="{{ url_for('joia.listar_joias') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

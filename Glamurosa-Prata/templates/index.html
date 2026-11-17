@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="text-center py-5">
+        <h1 class="display-5">Bem-vindo à Glamurosa Prata</h1>
+        <p class="lead">Joias em prata com brilho e elegância.</p>
+        <a href="{{ url_for('joia.listar_joias') }}" class="btn btn-dark btn-lg">Ver joias</a>
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('joia.cadastrar_joia') }}" class="btn btn-outline-dark btn-lg">Cadastrar joia</a>
+        {% endif %}
+    </div>
+{% endblock %}

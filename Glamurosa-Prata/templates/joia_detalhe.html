@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}{{ joia.nome }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    {% if joia.imagem_url %}
+    <div class="col-md-4 mb-3">
+        <img src="{{ joia.imagem_url }}" alt="{{ joia.nome }}" class="img-fluid rounded">
+    </div>
+    {% endif %}
+    <div class="{% if joia.imagem_url %}col-md-8{% else %}col-12{% endif %}">
+        <h1>{{ joia.nome }}</h1>
+        <p class="text-muted">Código: {{ joia.codigo }}</p>
+
+        <p><strong>Categoria:</strong> {{ joia.categoria }}</p>
+        <p><strong>Tipo de prata:</strong> {{ joia.tipo_prata }}</p>
+        <p><strong>Preço:</strong> R$ {{ "%.2f"|format(joia.preco)|replace('.', ',') }}</p>
+        <p><strong>Estoque:</strong> {{ joia.estoque }}</p>
+        {% if joia.peso_gramas is not none %}<p><strong>Peso:</strong> {{ joia.peso_gramas }} g</p>{% endif %}
+        {% if joia.tamanho %}<p><strong>Tamanho:</strong> {{ joia.tamanho }}</p>{% endif %}
+        {% if joia.descricao %}<p><strong>Descrição:</strong> {{ joia.descricao }}</p>{% endif %}
+        <p class="text-muted small">Cadastrada em {{ joia.criado_em.strftime('%d/%m/%Y %H:%M') }}</p>
+
+        <a href="{{ url_for('joia.listar_joias') }}" class="btn btn-secondary">Voltar</a>
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('joia.editar_joia', joia_id=joia.id) }}" class="btn btn-primary">Editar</a>
+            <form action="{{ url_for('joia.deletar_joia', joia_id=joia.id) }}" method="post" style="display:inline;"
+                  onsubmit="return confirm('Excluir esta joia?');">
+                <button type="submit" class="btn btn-danger">Excluir</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
